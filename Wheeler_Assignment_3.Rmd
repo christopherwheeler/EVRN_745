@@ -2,7 +2,7 @@
 title: 'EVRN 745 Assignment 3: gganimate guide'
 author: "Christopher Wheeler"
 date: '2022-10-04'
-output: github_document
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
