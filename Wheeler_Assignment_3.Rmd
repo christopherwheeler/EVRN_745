@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
 ```
 
 ## 1) Goals of the package
@@ -20,22 +20,34 @@ The main goal of gganimate is to extend to ggplot syntax and aesthetic scheme to
 
 
 ## 2) Examples demonstrating the functionality of the package
-
+For this first example, we need to load the `gganimte` package, as well as an ancillary package called `gifski`(this package allows gganimate to render gif files. I beleive there are other packages you can use that more or less do the same thing). The first example and figure below make use of the `mtcars` data set:
+```{r}
+head(mtcars)
+```
+As you can see above, this data set list attributes of a number of car models. In this graph below, we are taking a base static boxplot showing the mpg distributions for groups of cars with different numbers of cylinders, but then using the number of forward gears (as a factor) to animate.
 ```{r}
 library(tidyverse)
 library(gganimate)
 library(gifski)
 
+# Here is regular ggplot syntax
 ggplot(mtcars, aes(factor(cyl), mpg)) + 
   geom_boxplot() + 
-  # Here comes the gganimate code
+  # Here is where we start adding gganimate code
+  # The transition_states function allows you to choose the variable (states = x) you want to animate with
   transition_states(
-    gear,
+  # The states input is an unquoted column name
+    states = gear,
+  # The transition_length input is the relative length of time the image transitions
     transition_length = 2,
+  # The state_length input is the relative length of time the image stays in each discrete state
     state_length = 1) +
+  # the enter and exit functions define how new data should appear and how old data should disappear 
   enter_fade() + 
   exit_shrink() +
+  # ease_aes() defines the rate of change during transitions between states
   ease_aes('sine-in-out') + 
+  # this is all theme stuff
    theme_bw() + 
   theme(panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank(),
@@ -47,20 +59,29 @@ ggplot(mtcars, aes(factor(cyl), mpg)) +
 
 
 ## 3) An example figure
-
+This next example uses the gapminder data set, which lists demographic statistics for multiple countries and how they change yearly throughout the 20th century. This graph uses time as its transition variable, and plots life expectancy versus GDP grouped by continent. Additionally, population for each country is mapped to the size of the point on the plot (i.e., the dot getting larger through time indicates increasing population).
 ```{r}
 library(gapminder)
+head(gapminder)
+```
 
+```{r}
+# Here is regular ggplot syntax
 ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
   geom_point(alpha = 0.7, show.legend = FALSE) +
   scale_colour_manual(values = country_colors) +
   scale_size(range = c(2, 12)) +
   scale_x_log10() +
   facet_wrap(~continent) +
-  # Here comes the gganimate specific bits
+  # Here is the gganmimate code
+  # the labs function creates a label of the transition states as it changes, as well as the x and y axes
   labs(title = 'Year: {frame_time}', x = 'GDP per capita', y = 'life expectancy') +
+  # the transition_time function accepts the an unquoted column name as the time series transition state
+  # it is the time series version of the transition_states function above
   transition_time(year) +
+  # ease_aes() defines the rate of change during transitions between states, as above
   ease_aes('linear') + 
+  # this is all theme stuff
   theme_bw() + 
   theme(panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank(),
