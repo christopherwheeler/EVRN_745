@@ -5,27 +5,34 @@ Christopher Wheeler
 
 ## 1) Goals of the package
 
-The main goal of gganimate is to extend to ggplot syntax and aesthetic
+The main goal of gganimate is to extend the ggplot syntax and aesthetic
 scheme to the generation of animated graphs. It does this by adding a
-few new types of functions dealing with implemeting different types of
-animations and rendering the resultant `gganim` objects as GIF files.
-These functions are appended to the ggplot call using the expected `+`
-operator. Here are some examples of these functions and their uses:
+few new types of functions dealing with the implementation of different
+types of animations and rendering the resultant `gganim` objects as GIF
+files. These functions are appended to the ggplot call using the
+expected `+` operator. Here are some examples of these functions and
+their uses:
 
 `transition_*()` defines how the data should be spread out and how it
-relates to itself across time. `view_*() defines`how the positional
-scales should change along the animation. `shadow_*() defines` how data
-from other points in time should be presented in the given point in
-time. `enter_*()/exit_*()` defines how new data should appear and how
-old data should disappear during the course of the animation.
+relates to itself across time.
+
+`view_*() defines`how the positional scales should change along the
+animation.
+
+`shadow_*() defines` how data from other points in time should be
+presented in the given point in time.
+
+`enter_*()/exit_*()` defines how new data should appear and how old data
+should disappear during the course of the animation.
+
 `ease_aes()`defines how different aesthetics should be eased during
 transitions.
 
 ## 2) Examples demonstrating the functionality of the package
 
-For this first example, we need to load the `gganimte` package, as well
+For this first example, we need to load the `gganimate` package, as well
 as an ancillary package called `gifski`(this package allows gganimate to
-render gif files. I beleive there are other packages you can use that
+render gif files; I believe there are other packages you can use that
 more or less do the same thing). The first example and figure below make
 use of the `mtcars` data set:
 
@@ -56,7 +63,7 @@ library(gifski)
 ggplot(mtcars, aes(factor(cyl), mpg)) + 
   geom_boxplot() + 
   # Here is where we start adding gganimate code
-  # The transition_states function allows you to choose the variable (states = x) you want to animate with
+  # The transition_states function allows you to choose the variable (states = x) used for animation states
   transition_states(
   # The states input is an unquoted column name
     states = gear,
@@ -82,13 +89,13 @@ ggplot(mtcars, aes(factor(cyl), mpg)) +
 
 ## 3) An example figure
 
-This next example uses the gapminder data set, which lists demographic
-statistics for multiple countries and how they change yearly throughout
-the 20th century. This graph uses time as its transition variable, and
-plots life expectancy versus GDP grouped by continent. Additionally,
-population for each country is mapped to the size of the point on the
-plot (i.e., the dot getting larger through time indicates increasing
-population).
+This next example uses the `gapminder` data set, which lists demographic
+statistics for multiple countries and how they change yearly through the
+20th century. This graph uses time as its transition variable, and plots
+life expectancy versus GDP of a country as points, faceted by continent.
+Additionally, population for each country is mapped to the size of the
+point on the plot (i.e., the dot getting larger through time indicates
+increasing population).
 
 ``` r
 library(gapminder)
